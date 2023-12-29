@@ -19,4 +19,5 @@ class Category {
 
   final String name;
   final Color color;
+
 }
