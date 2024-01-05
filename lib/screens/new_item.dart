@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shopping_list_6/data/categories.dart';
 import 'package:shopping_list_6/models/grocery_item.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/category.dart';
 
@@ -17,17 +20,32 @@ class _NewItemState extends State<NewItem> {
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.vegetables]!;
 
-  void _saveItem() {
+  void _saveItem() async {
     // This will exist because this method can only be clicked in a button
     // inside the form, which means it will always already have been built once
     // the method has been executed.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      Navigator.of(context).pop(GroceryItem(
-          id: DateTime.now().toString(),
-          name: _enteredName,
-          quantity: _enteredQuantity,
-          category: _selectedCategory,));
+      final url = Uri.https('udemy-flutter-course-4d9c7-default-rtdb.firebaseio.com', 'shopping-list.json');
+      final response = await http.post(url, headers: {
+        'Content-Type': 'application/json',
+      }, body: json.encode({
+          'name': _enteredName,
+          'quantity': _enteredQuantity,
+          'category': _selectedCategory.name,
+
+      }));
+
+      if (!context.mounted) {
+        return;
+      }  
+
+      Navigator.of(context).pop();
+      // Navigator.of(context).pop(GroceryItem(
+      //     id: DateTime.now().toString(),
+      //     name: _enteredName,
+      //     quantity: _enteredQuantity,
+      //     category: _selectedCategory,));
     }
   }
 
