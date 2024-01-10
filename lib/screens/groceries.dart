@@ -140,7 +140,7 @@ class _GroceriesScreenState extends State<GroceriesScreen> {
       content = Center(
           child: Text(
         _error!,
-        style: TextStyle(fontSize: 15),
+        style: const TextStyle(fontSize: 15),
       ));
     }
 
